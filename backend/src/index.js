@@ -53,3 +53,15 @@ async function start() {
 
 start();
 module.exports = app;
+
+// Pega esto al inicio de tu archivo
+import cors from 'cors'
+
+// Después de: const app = express()
+app.use(cors({
+  origin: 'https://tu-proyecto.vercel.app' // pon aquí tu URL real de Vercel
+}))
+
+app.get("/", (req, res) => {
+  res.json({ mensaje: "Backend Suga funcionando" })
+})
