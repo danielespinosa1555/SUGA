@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
@@ -18,6 +18,24 @@ const ChartTip = ({ active, payload, label }) => {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  
+  // ── NUEVO: Test de conexión al backend de Render ──
+  const [backendStatus, setBackendStatus] = useState('Conectando...');
+  useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://suga-1-vrqy.onrender.com';
+    fetch(`${apiUrl}/health`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('✅ Backend conectado:', data);
+        setBackendStatus(`✅ ${data.app} online`);
+      })
+      .catch(err => {
+        console.error('❌ Error backend:', err);
+        setBackendStatus('❌ Backend sin conexión');
+      });
+  }, []);
+  // ──────────────────────────────────────────────────
+
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => reportsAPI.dashboard().then(r => r.data),
@@ -44,6 +62,11 @@ export default function Dashboard() {
 
   return (
     <div>
+      {/* Banner de estado del backend */}
+      <div className="mb-3 text-xs" style={{ color: backendStatus.includes('✅') ? 'var(--green)' : 'var(--red)' }}>
+        {backendStatus}
+      </div>
+
       <PageHeader
         title={`Hola, ${stats?.org_name || 'SUGA'} 👋`}
         subtitle={new Date().toLocaleDateString('es-CO', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}
@@ -187,7 +210,6 @@ export default function Dashboard() {
                     <div className="text-xs" style={{ color:'var(--text3)' }}>
                       {u.total_absent} ausencias{u.group_name ? ` · ${u.group_name}` : ''}
                     </div>
-                  </div>
                   <div className="font-display font-black text-xl" style={{ color:'var(--red)' }}>
                     {parseFloat(u.attendance_pct||0).toFixed(0)}%
                   </div>
