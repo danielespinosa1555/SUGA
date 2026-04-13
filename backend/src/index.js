@@ -9,14 +9,17 @@ const { syncSchema } = require('./config/dbSync');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Render usa 10000, no 5000
+const PORT = process.env.PORT || 10000;
 
 // Seguridad
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
-// CORS: temporal en * para que Vercel conecte ya. Luego pones tu dominio.
+// CORS: dominios específicos porque usamos credentials
 app.use(cors({
-  origin: '*', // Cambiar por process.env.FRONTEND_URL cuando tengas la URL de Vercel
+  origin: [
+    'http://localhost:5173',
+    'https://suga-zsc3.vercel.app'
+  ],
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization'],
@@ -26,7 +29,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Ruta principal para que no salga "Ruta / no encontrada"
+// Ruta principal
 app.get("/", (req, res) => {
   res.json({ mensaje: "Backend Suga funcionando desde Render" });
 });
