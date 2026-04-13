@@ -19,7 +19,6 @@ const ChartTip = ({ active, payload, label }) => {
 export default function Dashboard() {
   const navigate = useNavigate();
   
-  // ── NUEVO: Test de conexión al backend de Render ──
   const [backendStatus, setBackendStatus] = useState('Conectando...');
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL || 'https://suga-1-vrqy.onrender.com';
@@ -34,7 +33,6 @@ export default function Dashboard() {
         setBackendStatus('❌ Backend sin conexión');
       });
   }, []);
-  // ──────────────────────────────────────────────────
 
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
@@ -62,7 +60,6 @@ export default function Dashboard() {
 
   return (
     <div>
-      {/* Banner de estado del backend */}
       <div className="mb-3 text-xs" style={{ color: backendStatus.includes('✅') ? 'var(--green)' : 'var(--red)' }}>
         {backendStatus}
       </div>
@@ -75,7 +72,6 @@ export default function Dashboard() {
         <button className="btn-primary text-sm" onClick={() => navigate('/sessions')}>+ Nueva sesión</button>
       </PageHeader>
 
-      {/* KPIs */}
       <div className="grid grid-cols-4 gap-4 mb-7">
         <StatCard label="Asistencia promedio" value={`${stats?.avg_attendance||0}%`}
           color="green" sub="↑ Acumulado" sparkData={sparkGreen} />
@@ -87,7 +83,6 @@ export default function Dashboard() {
           color="blue" sub="Este mes" sparkData={sparkBlue} />
       </div>
 
-      {/* Alerts */}
       {atRiskUsers.length > 0 && (
         <div className="space-y-2 mb-7">
           {atRiskUsers.map(u => (
@@ -105,7 +100,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Charts row */}
       <div className="grid grid-cols-2 gap-6 mb-6">
         <div className="card">
           <div className="flex items-center justify-between mb-5">
@@ -158,9 +152,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Bottom row */}
       <div className="grid grid-cols-2 gap-6">
-        {/* Recent sessions */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display font-bold text-sm">Últimas sesiones</h2>
@@ -191,7 +183,6 @@ export default function Dashboard() {
           </table>
         </div>
 
-        {/* At-risk users */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display font-bold text-sm">Usuarios en riesgo</h2>
@@ -210,6 +201,7 @@ export default function Dashboard() {
                     <div className="text-xs" style={{ color:'var(--text3)' }}>
                       {u.total_absent} ausencias{u.group_name ? ` · ${u.group_name}` : ''}
                     </div>
+                  </div>
                   <div className="font-display font-black text-xl" style={{ color:'var(--red)' }}>
                     {parseFloat(u.attendance_pct||0).toFixed(0)}%
                   </div>
