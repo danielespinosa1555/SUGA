@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SUGA — Sistema Universal de Gestión de Asistencia
 
 **Stack:** React 18 + Vite · Node.js + Express · PostgreSQL
@@ -405,3 +406,6 @@ Authorization: Bearer <token>
 | 10 | ✨ Nuevo | Admin no podía ver justificaciones de un usuario específico desde la página de Usuarios | Botón "Ver docs" en la tabla de usuarios abre panel con todas sus justificaciones |
 | 11 | ✨ Nuevo | Emails de justificación no llegaban al admin al enviar, ni al miembro al revisar | Implementados en `justificationController` con plantillas HTML responsivas |
 | 12 | ✨ Nuevo | Alerta de asistencia baja solo era in-app, sin email | Agregado email de alerta con porcentaje actual y umbral requerido |
+=======
+# SUGA
+>>>>>>> 8e5cf38aa9409c72fea381fc2a8782bf15747420
