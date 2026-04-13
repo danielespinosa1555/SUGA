@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api', timeout: 30000 });
+const api = axios.create({ baseURL: 'https://suga-1-vrqy.onrender.com/api', timeout: 30000 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('suga_token');
@@ -36,7 +36,7 @@ export const authAPI = {
   verify2FA:            (code) => api.post('/auth/verify-2fa', { code }),
   setupOrganization:    (d)    => api.post('/auth/setup-organization', d),
   regenerateInviteCode: ()     => api.post('/auth/invite-code/regenerate'),
-  googleLogin:          ()     => { window.location.href = '/api/auth/google'; },
+  googleLogin:          ()     => { window.location.href = 'https://suga-1-vrqy.onrender.com/api/auth/google'; },
 };
 
 export const usersAPI = {
@@ -72,7 +72,7 @@ export const justificationsAPI = {
   sendMessage:   (id,d)=> api.post(`/justifications/${id}/messages`, d),
   getFileBlobUrl: async (id) => {
     const token = localStorage.getItem('suga_token');
-    const res = await fetch(`/api/justifications/${id}/file`, {
+    const res = await fetch(`https://suga-1-vrqy.onrender.com/api/justifications/${id}/file`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (!res.ok) throw new Error('No se pudo obtener el archivo');
