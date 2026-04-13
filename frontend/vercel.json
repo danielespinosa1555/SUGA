@@ -1,15 +1,12 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
+      "source": "/api/:path*",
+      "destination": "https://suga-1-vrqy.onrender.com/api/:path*"
+    },
     {
-      "src": "/api/(.*)",
-      "dest": "backend/server.js"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
