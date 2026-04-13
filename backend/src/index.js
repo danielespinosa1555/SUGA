@@ -1,51 +1,37 @@
 require('dotenv').config();
 const express = require('express');
-const cors    = require('cors');
-const helmet  = require('helmet');
-const path    = require('path');
+const cors = require('cors');
+const helmet = require('helmet');
+const path = require('path');
 
-const express = require('express')
-const cors = require('cors')
-
-const app = express()
-
-// CORS: Cambia esto por tu URL real de Vercel cuando la tengas
-app.use(cors({
-  origin: '*' // Temporal para que funcione ya. Luego lo cambias por tu dominio
-}))
-
-app.use(express.json())
-
-// Ruta principal para que no salga "Ruta / no encontrada"
-app.get("/", (req, res) => {
-  res.json({ mensaje: "Backend Suga funcionando desde Render" })
-})
-
-// Aquí van tus rutas reales
-app.get("/api/test", (req, res) => {
-  res.json({ data: "Conectado con Vercel" })
-})
-
-const PORT = process.env.PORT || 10000
-app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`))
 require('./config/passport');
 const { syncSchema } = require('./config/dbSync');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
-const app  = express();
-const PORT = process.env.PORT || 5000;
+const app = express();
+const PORT = process.env.PORT || 10000; // Render usa 10000, no 5000
 
+// Seguridad
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+// CORS: temporal en * para que Vercel conecte ya. Luego pones tu dominio.
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: '*', // Cambiar por process.env.FRONTEND_URL cuando tengas la URL de Vercel
   credentials: true,
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization'],
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Ruta principal para que no salga "Ruta / no encontrada"
+app.get("/", (req, res) => {
+  res.json({ mensaje: "Backend Suga funcionando desde Render" });
+});
+
+// Health check
 app.get('/health', (req, res) => {
   res.json({ status:'ok', app:'SUGA API', version:'1.0.0', timestamp: new Date().toISOString() });
 });
@@ -54,7 +40,7 @@ app.get('/health', (req, res) => {
 async function start() {
   try {
     console.log('\n[SUGA] Syncing database schema...');
-    await syncSchema();                          // ← tables exist before any request
+    await syncSchema();
     console.log('[SUGA] Schema ready.\n');
 
     // Load routes AFTER schema is confirmed
@@ -64,7 +50,7 @@ async function start() {
     app.use(errorHandler);
 
     app.listen(PORT, () => {
-      console.log(`🚀 SUGA API running on http://localhost:${PORT}`);
+      console.log(`🚀 SUGA API running on port ${PORT}`);
       console.log(`📋 Environment : ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔐 Google OAuth: ${process.env.GOOGLE_CLIENT_ID ? '✅ configured' : '⚠️  not configured'}`);
       console.log(`📧 Email SMTP  : ${process.env.SMTP_USER ? `✅ ${process.env.SMTP_USER}` : '⚠️  not configured'}`);
@@ -77,4 +63,3 @@ async function start() {
 
 start();
 module.exports = app;
-
