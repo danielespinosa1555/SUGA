@@ -4,6 +4,30 @@ const cors    = require('cors');
 const helmet  = require('helmet');
 const path    = require('path');
 
+const express = require('express')
+const cors = require('cors')
+
+const app = express()
+
+// CORS: Cambia esto por tu URL real de Vercel cuando la tengas
+app.use(cors({
+  origin: '*' // Temporal para que funcione ya. Luego lo cambias por tu dominio
+}))
+
+app.use(express.json())
+
+// Ruta principal para que no salga "Ruta / no encontrada"
+app.get("/", (req, res) => {
+  res.json({ mensaje: "Backend Suga funcionando desde Render" })
+})
+
+// Aquí van tus rutas reales
+app.get("/api/test", (req, res) => {
+  res.json({ data: "Conectado con Vercel" })
+})
+
+const PORT = process.env.PORT || 10000
+app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`))
 require('./config/passport');
 const { syncSchema } = require('./config/dbSync');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
@@ -54,14 +78,3 @@ async function start() {
 start();
 module.exports = app;
 
-// Pega esto al inicio de tu archivo
-import cors from 'cors'
-
-// Después de: const app = express()
-app.use(cors({
-  origin: 'https://tu-proyecto.vercel.app' // pon aquí tu URL real de Vercel
-}))
-
-app.get("/", (req, res) => {
-  res.json({ mensaje: "Backend Suga funcionando" })
-})
